@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "scripts": {
+    "dev": "wrangler dev --port 5787",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "drizzle-gen-control": "drizzle-kit generate --config drizzle-control.config.ts",
+    "drizzle-gen-user": "drizzle-kit generate --config drizzle-user.config.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^1.2.12",
+    "@ai-sdk/google": "^1.2.19",
+    "@ai-sdk/openai": "^1.3.22",
+    "@hono/valibot-validator": "^0.5.2",
+    "@openrouter/ai-sdk-provider": "^0.7.2",
+    "@types/node": "^22.15.30",
+    "ai": "^4.3.16",
+    "arctic": "^3.7.0",
+    "zod": "^3.25.56"
+  },
+  "devDependencies": {
+    "wrangler": "^4.4.0"
+  }
+}

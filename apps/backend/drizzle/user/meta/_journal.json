@@ -1,0 +1,62 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1749471180263,
+      "tag": "0000_fat_spitfire",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1749483648997,
+      "tag": "0001_gray_silver_fox",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1749657393608,
+      "tag": "0002_spicy_paibok",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1749676681288,
+      "tag": "0003_majestic_lady_bullseye",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1749726898008,
+      "tag": "0004_easy_forge",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1749980415109,
+      "tag": "0005_unusual_texas_twister",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1749982514014,
+      "tag": "0006_confused_master_mold",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1750007125196,
+      "tag": "0007_ordinary_onslaught",
+      "breakpoints": true
+    }
+  ]
+}

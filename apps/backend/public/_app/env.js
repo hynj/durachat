@@ -1,0 +1,1 @@
+export const env={"PUBLIC_DEBUG_ENABLED":"false","PUBLIC_HONO_API_URL":"http://localhost:5787"}

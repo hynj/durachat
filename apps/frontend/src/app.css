@@ -1,0 +1,360 @@
+@import 'tailwindcss';
+@import 'katex/dist/katex.min.css';
+@import 'tw-animate-css';
+
+@utility no-scrollbar {
+	@apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
+
+/* Markdown Content Styles */
+@layer utilities {
+	.markdown-content h1 {
+		@apply mt-8 mb-6 text-2xl font-bold first:mt-0;
+		background: transparent !important;
+	}
+
+	.markdown-content h2 {
+		@apply mt-7 mb-4 text-xl font-semibold first:mt-0;
+		background: transparent !important;
+	}
+
+	.markdown-content h3 {
+		@apply mt-6 mb-3 text-lg font-medium first:mt-0;
+		background: transparent !important;
+	}
+
+	.markdown-content h4 {
+		@apply mt-3 mb-2 text-base font-medium first:mt-0;
+		background: transparent !important;
+	}
+
+	.markdown-content h5,
+	.markdown-content h6 {
+		@apply mt-2 mb-1 text-sm font-medium first:mt-0;
+		background: transparent !important;
+	}
+
+	.markdown-content p {
+		@apply mb-6 leading-7 last:mb-0;
+	}
+
+	.markdown-content strong {
+		@apply font-semibold;
+	}
+
+	.markdown-content dt {
+		@apply mt-4 mb-2 font-semibold;
+	}
+
+	.markdown-content dd {
+		@apply mb-4 ml-6 leading-7;
+	}
+
+	.markdown-content em {
+		@apply italic;
+	}
+
+	.markdown-content ul {
+		@apply my-4 list-disc space-y-2 pl-6;
+	}
+
+	.markdown-content ol {
+		@apply my-4 list-decimal space-y-2 pl-6;
+	}
+
+	.markdown-content li {
+		@apply leading-7;
+	}
+
+	.markdown-content blockquote {
+		@apply border-muted my-2 border-l-4 pl-4 italic;
+	}
+
+	.markdown-content a {
+		@apply text-primary underline hover:opacity-80;
+	}
+
+	.markdown-content {
+		@apply leading-7;
+		background: transparent !important;
+		font-size: 15px;
+		line-height: 1.7;
+	}
+
+	.markdown-content * {
+		background: transparent !important;
+	}
+
+	.markdown-content table {
+		@apply my-4 w-full border-collapse;
+	}
+
+	.markdown-content th,
+	.markdown-content td {
+		@apply border-border/30 border px-3 py-2 text-left;
+		background: transparent !important;
+	}
+
+	.markdown-content th {
+		@apply bg-muted/10 font-semibold;
+	}
+
+	/* KaTeX math styling */
+	.markdown-content .katex {
+		font-size: 1.15em;
+		color: inherit;
+	}
+
+	.markdown-content .katex-display {
+		margin: 1.5em 0;
+		text-align: center;
+		padding: 0.5em 0;
+	}
+
+	.markdown-content .katex-inline {
+		margin: 0 0.2em;
+		vertical-align: baseline;
+	}
+
+	/* Improve superscript and subscript rendering */
+	.markdown-content sup {
+		font-size: 0.75em;
+		vertical-align: super;
+		line-height: 0;
+	}
+
+	.markdown-content sub {
+		font-size: 0.75em;
+		vertical-align: sub;
+		line-height: 0;
+	}
+
+	/* Prism.js syntax highlighting customization */
+	.markdown-content pre[class*='language-'] {
+		background: hsl(var(--muted)) !important;
+		border: 1px solid hsl(var(--border));
+		color: hsl(var(--foreground)) !important;
+	}
+
+	.markdown-content code[class*='language-'] {
+		color: hsl(var(--foreground)) !important;
+		font-family: 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+	}
+
+	/* Syntax highlighting colors that work with light/dark themes */
+	.token.comment,
+	.token.prolog,
+	.token.doctype,
+	.token.cdata {
+		color: hsl(var(--muted-foreground)) !important;
+		font-style: italic;
+	}
+
+	.token.punctuation {
+		color: hsl(var(--foreground)) !important;
+	}
+
+	.token.property,
+	.token.tag,
+	.token.constant,
+	.token.symbol,
+	.token.deleted {
+		color: #f97316 !important; /* Orange */
+	}
+
+	.token.boolean,
+	.token.number {
+		color: #8b5cf6 !important; /* Purple */
+	}
+
+	.token.selector,
+	.token.attr-name,
+	.token.string,
+	.token.char,
+	.token.builtin,
+	.token.inserted {
+		color: #10b981 !important; /* Green */
+	}
+
+	.token.operator,
+	.token.entity,
+	.token.url,
+	.language-css .token.string,
+	.style .token.string,
+	.token.variable {
+		color: #06b6d4 !important; /* Cyan */
+	}
+
+	.token.atrule,
+	.token.attr-value,
+	.token.function,
+	.token.class-name {
+		color: #3b82f6 !important; /* Blue */
+	}
+
+	.token.keyword {
+		color: #ec4899 !important; /* Pink */
+		font-weight: 600;
+	}
+
+	.token.regex,
+	.token.important {
+		color: #f59e0b !important; /* Amber */
+		font-weight: 600;
+	}
+
+	.token.important,
+	.token.bold {
+		font-weight: bold;
+	}
+
+	.token.italic {
+		font-style: italic;
+	}
+}
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+	--radius: 0.625rem;
+	--background: oklch(1 0 0);
+	--foreground: oklch(0.147 0.004 49.25);
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.147 0.004 49.25);
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.147 0.004 49.25);
+	--primary: oklch(0.216 0.006 56.043);
+	--primary-foreground: oklch(0.985 0.001 106.423);
+	--secondary: oklch(0.97 0.001 106.424);
+	--secondary-foreground: oklch(0.216 0.006 56.043);
+	--muted: oklch(0.97 0.001 106.424);
+	--muted-foreground: oklch(0.553 0.013 58.071);
+	--accent: oklch(0.97 0.001 106.424);
+	--accent-foreground: oklch(0.216 0.006 56.043);
+	--destructive: oklch(0.577 0.245 27.325);
+	--border: oklch(0.9 0.005 48.717);
+	--input: oklch(0.9 0.005 48.717);
+	--ring: oklch(0.709 0.01 56.259);
+	--chart-1: oklch(0.646 0.222 41.116);
+	--chart-2: oklch(0.6 0.118 184.704);
+	--chart-3: oklch(0.398 0.07 227.392);
+	--chart-4: oklch(0.828 0.189 84.429);
+	--chart-5: oklch(0.769 0.188 70.08);
+	--sidebar: oklch(0.985 0.001 106.423);
+	--sidebar-foreground: oklch(0.147 0.004 49.25);
+	--sidebar-primary: oklch(0.216 0.006 56.043);
+	--sidebar-primary-foreground: oklch(0.985 0.001 106.423);
+	--sidebar-accent: oklch(0.97 0.001 106.424);
+	--sidebar-accent-foreground: oklch(0.216 0.006 56.043);
+	--sidebar-border: oklch(0.923 0.003 48.717);
+	--sidebar-ring: oklch(0.709 0.01 56.259);
+}
+
+.dark {
+	--background: oklch(0.18 0.008 49.25);
+	--foreground: oklch(0.985 0.001 106.423);
+	--card: oklch(0.25 0.01 56.043);
+	--card-foreground: oklch(0.985 0.001 106.423);
+	--popover: oklch(0.25 0.01 56.043);
+	--popover-foreground: oklch(0.985 0.001 106.423);
+	--primary: oklch(0.923 0.003 48.717);
+	--primary-foreground: oklch(0.216 0.006 56.043);
+	--secondary: oklch(0.268 0.007 34.298);
+	--secondary-foreground: oklch(0.985 0.001 106.423);
+	--muted: oklch(0.268 0.007 34.298);
+	--muted-foreground: oklch(0.709 0.01 56.259);
+	--accent: oklch(0.268 0.007 34.298);
+	--accent-foreground: oklch(0.985 0.001 106.423);
+	--destructive: oklch(0.704 0.191 22.216);
+	--border: oklch(1 0 0 / 15%);
+	--input: oklch(1 0 0 / 20%);
+	--ring: oklch(0.553 0.013 58.071);
+	--chart-1: oklch(0.488 0.243 264.376);
+	--chart-2: oklch(0.696 0.17 162.48);
+	--chart-3: oklch(0.769 0.188 70.08);
+	--chart-4: oklch(0.627 0.265 303.9);
+	--chart-5: oklch(0.645 0.246 16.439);
+	--sidebar: oklch(0.25 0.01 56.043);
+	--sidebar-foreground: oklch(0.985 0.001 106.423);
+	--sidebar-primary: oklch(0.488 0.243 264.376);
+	--sidebar-primary-foreground: oklch(0.985 0.001 106.423);
+	--sidebar-accent: oklch(0.268 0.007 34.298);
+	--sidebar-accent-foreground: oklch(0.985 0.001 106.423);
+	--sidebar-border: oklch(1 0 0 / 15%);
+	--sidebar-ring: oklch(0.553 0.013 58.071);
+}
+
+@theme inline {
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+	--color-chart-1: var(--chart-1);
+	--color-chart-2: var(--chart-2);
+	--color-chart-3: var(--chart-3);
+	--color-chart-4: var(--chart-4);
+	--color-chart-5: var(--chart-5);
+	--color-sidebar: var(--sidebar);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground;
+		font-family: 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+	}
+
+	/* Custom scrollbar styling */
+	::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: hsl(var(--muted-foreground) / 0.3);
+		border-radius: 4px;
+		border: 2px solid transparent;
+		background-clip: content-box;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: hsl(var(--muted-foreground) / 0.5);
+		background-clip: content-box;
+	}
+
+	/* Firefox scrollbar */
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+	}
+}

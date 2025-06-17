@@ -1,0 +1,1 @@
+ALTER TABLE `attachments` ADD `conversation_id` text NOT NULL;
