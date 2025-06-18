@@ -4,6 +4,7 @@
 	export let usage: Usage | undefined;
 	export let model: string | undefined;
 	export let provider: string | undefined;
+	export let responseTime: number | undefined;
 
 	function formatCost(costInCents: number): string {
 		if (costInCents < 100) {
@@ -60,10 +61,18 @@
 		}
 		return modelName || 'Unknown Model';
 	}
+
+	function formatResponseTime(timeMs: number): string {
+		if (timeMs < 1000) {
+			return `${Math.round(timeMs)}ms`;
+		} else {
+			return `${(timeMs / 1000).toFixed(1)}s`;
+		}
+	}
 </script>
 
 {#if usage}
-	<div class="text-muted-foreground/70 mt-2 flex items-center gap-2 text-[11px]">
+	<div class="message-stats opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-muted-foreground/70 mt-2 flex items-center gap-2 text-[11px]">
 		<!-- Model info -->
 		<span class="font-medium">
 			{getModelDisplayName(model || usage.model)}
@@ -76,14 +85,9 @@
 		<!-- Tokens -->
 		<span>{formatTokens(usage.totalTokens)} tokens</span>
 
-		<!-- Time -->
-		{#if usage.createdAt}
-			<span
-				>{new Date(usage.createdAt).toLocaleTimeString([], {
-					hour: '2-digit',
-					minute: '2-digit'
-				})}</span
-			>
+		<!-- Response Time -->
+		{#if responseTime}
+			<span class="font-medium">{formatResponseTime(responseTime)}</span>
 		{/if}
 	</div>
 {/if}

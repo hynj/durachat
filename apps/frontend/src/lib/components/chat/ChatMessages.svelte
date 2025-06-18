@@ -18,11 +18,32 @@
 		isStreaming = $bindable(false),
 		reasoningHistory = $bindable(new Map())
 	}: {
-		messages: (Message & { usage?: Usage })[];
+		messages: (Message & { usage?: Usage; responseTime?: number })[];
 		allAttachments: Array<{ attachment: any; messageId: string | null }>;
 		isStreaming: boolean;
 		reasoningHistory: Map<string, string>;
 	} = $props();
+
+	// Calculate response time for each message
+	function calculateResponseTime(message: Message & { usage?: Usage; responseTime?: number }): number | undefined {
+		if (message.responseTime) {
+			return message.responseTime;
+		}
+		
+		// Primary source: usage.duration from backend
+		if (message.usage && 'duration' in message.usage) {
+			return (message.usage as any).duration;
+		}
+		
+		// Fallback: if we have usage with createdAt, calculate a simple estimate
+		if (message.usage?.createdAt && message.updatedAt) {
+			const requestTime = new Date(message.createdAt).getTime();
+			const responseTime = new Date(message.updatedAt).getTime();
+			return responseTime - requestTime;
+		}
+		
+		return undefined;
+	}
 
 	// Configure marked with KaTeX and custom styling
 	marked.use(
@@ -143,7 +164,7 @@
 
 				<!-- Assistant message with markdown formatting -->
 				<div
-					class="markdown-content animate-in fade-in slide-in-from-bottom-2 pt-6 pb-2 text-base leading-7 duration-500 ease-out"
+					class="group markdown-content animate-in fade-in slide-in-from-bottom-2 pt-6 pb-2 text-base leading-7 duration-500 ease-out cursor-default"
 				>
 					{@html renderMarkdown(String(message.content))}
 					<!-- Assistant message attachments -->
@@ -157,7 +178,12 @@
 
 					<!-- Message Statistics -->
 					{#if message.role === 'assistant' && !message.streaming && !message.isStreaming}
-						<MessageStats usage={message.usage} model={message.model} provider={message.provider} />
+						<MessageStats 
+							usage={message.usage} 
+							model={message.model} 
+							provider={message.provider}
+							responseTime={calculateResponseTime(message)} 
+						/>
 					{/if}
 				</div>
 			{/if}
