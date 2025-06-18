@@ -1,32 +1,48 @@
-# Turborepo Svelte starter
+# DuraChat
 
-This Turborepo starter is maintained by the Turborepo core team.
+Entry for T3 Cloneathon
 
-## Using this example
+AI Chat application, very work in progress
+Built with svelte, hono, drizzle-orm, shadcn-svelte, durable objects, and more
 
-Run the following command:
+## Project structure
 
-```sh
-npx create-turbo@latest -e with-svelte
-```
+SvelteKit SPA - it gets built into a static site and moved into the bakcend assets directory
+This gets deployed to Cloudflare
 
-## What's inside?
+## Setup
 
-This Turborepo includes the following packages/apps:
+Make .dev.vars in the apps/backend directory
 
-### Apps and Packages
+with the following contents:
+WORKER_ENV=local
+GOOGLE_API_KEY=
+OPENAI_API_KEY=
+ANTHROPIC_API_KEY=
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+BASE_URL=http://localhost:5787
+LOG_LEVEL=DEBUG
+OPEN_ROUTER_API_KEY=
+ENCRYPTION_MASTER_KEY=
 
-- `docs`: a [svelte-kit](https://kit.svelte.dev/) app
-- `web`: another [svelte-kit](https://kit.svelte.dev/) app
-- `ui`: a stub Svelte component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-plugin-svelte` and `eslint-config-prettier`)
+Generate a new ENCRYPTION_MASTER_KEY with openssl rand -base64 32
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+Make a .env.local file in the apps/frontend directory
 
-### Utilities
+With the folowing contents:
+PUBLIC_DEBUG_ENABLED=false
+PUBLIC_HONO_API_URL=http://localhost:5787
 
-This Turborepo has some additional tools already setup for you:
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+run bun install in the root directory
+run bun run dev in the root directory
+
+## Deploying
+
+To deploy to Cloudflare, run the following commands:
+
+bun run build
+cd apps/backend
+bun run deploy
+
