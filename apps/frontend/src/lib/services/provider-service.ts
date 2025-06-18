@@ -37,11 +37,12 @@ class ProviderService {
 		return getProvidersForService();
 	}
 
-	async switchProvider(conversationId: string, provider: string, model: string): Promise<void> {
+	async switchProvider(conversationId: string | null | undefined, provider: string, model: string): Promise<void> {
 		// If no conversation ID, this is a new conversation - don't call backend yet
+		// The provider/model selection will be used when the conversation is created
 		if (!conversationId) {
-			console.log('🔄 Provider switch for new conversation - storing in frontend state only');
-			return;
+			console.log('🔄 Provider switch for new conversation - will use when creating conversation');
+			return Promise.resolve();
 		}
 
 		try {
