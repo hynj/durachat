@@ -4,6 +4,7 @@ import authRoutes from './routes/auth'
 import attachmentRoutes from './routes/attachments'
 import oAuthRoutes from './routes/oauth'
 import userSettingsRoutes from './routes/user-settings'
+import shareRoutes from './routes/share'
 import { cors } from 'hono/cors'
 import { Control } from './do/control'
 import { User } from './do/user'
@@ -32,6 +33,7 @@ const routes = app
   .route('/attachments', attachmentRoutes)
   .route('/oauth', oAuthRoutes)
   .route('/user-settings', userSettingsRoutes)
+  .route('/share', shareRoutes)
 
 export { Control }
 export { User }

@@ -761,4 +761,33 @@ export class UserChatRPC extends RpcTarget {
       return null;
     }
   }
+
+  async createShareLink(conversationId: string): Promise<{ uniqueId: string, id: string | undefined }> {
+    try {
+      // Check if conversation exists
+      const conversation = await getConversation(this.db, conversationId);
+      if (!conversation) {
+        throw new Error('Conversation not found');
+      }
+
+      // Generate unique share ID
+      const uniqueId = crypto.randomUUID();
+      const shareKey = `share:${uniqueId}`;
+      
+      // Store share data in DO storage
+      const shareData = {
+        conversationId,
+        createdAt: Date.now(),
+        expiresAt: Date.now() + (7 * 24 * 60 * 60 * 1000) // 7 days from now
+      };
+      
+      await this.storage.put(shareKey, shareData);
+      
+      return { uniqueId, id: await this.storage.get('userID') };
+    } catch (error) {
+      console.error('Error creating share link:', error);
+      throw error;
+    }
+  }
+
 }

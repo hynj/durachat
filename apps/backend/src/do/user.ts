@@ -6,6 +6,7 @@ import { NewSession } from "../db/user/sessions";
 import { createUserSession, validateUserSession, deleteUserSession } from "./utils/session-helpers";
 import { UserChatRPC } from "./classes/UserChatRPC";
 import { UserAttachmentRPC } from "./classes/UserAttachmentRPC";
+import { UserShare } from "./classes/UserShare";
 import { getLogger } from '../utils/logger';
 import { UserSettings } from "./classes/UserSettings";
 import { conversations, messages, userSettings } from "../db/user/data";
@@ -89,6 +90,11 @@ export class User extends DurableObject {
   async getAttachmentRPC(sessionToken: string): Promise<UserAttachmentRPC> {
     await this.validateSession(sessionToken);
     return new UserAttachmentRPC(this.db, this.env);
+  }
+
+  async getShareRPC(): Promise<UserShare> {
+    // No session validation needed for public share access
+    return new UserShare(this.db, this.ctx, this.storage, this.env);
   }
 
   async fetchWs(request: Request, sessionToken: string): Promise<Response> {

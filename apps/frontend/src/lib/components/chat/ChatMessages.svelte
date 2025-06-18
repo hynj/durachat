@@ -16,32 +16,36 @@
 		messages = $bindable([]),
 		allAttachments = $bindable([]),
 		isStreaming = $bindable(false),
-		reasoningHistory = $bindable(new Map())
+		reasoningHistory = $bindable(new Map()),
+		conversationId
 	}: {
 		messages: (Message & { usage?: Usage; responseTime?: number })[];
 		allAttachments: Array<{ attachment: any; messageId: string | null }>;
 		isStreaming: boolean;
 		reasoningHistory: Map<string, string>;
+		conversationId?: string;
 	} = $props();
 
 	// Calculate response time for each message
-	function calculateResponseTime(message: Message & { usage?: Usage; responseTime?: number }): number | undefined {
+	function calculateResponseTime(
+		message: Message & { usage?: Usage; responseTime?: number }
+	): number | undefined {
 		if (message.responseTime) {
 			return message.responseTime;
 		}
-		
+
 		// Primary source: usage.duration from backend
 		if (message.usage && 'duration' in message.usage) {
 			return (message.usage as any).duration;
 		}
-		
+
 		// Fallback: if we have usage with createdAt, calculate a simple estimate
 		if (message.usage?.createdAt && message.updatedAt) {
 			const requestTime = new Date(message.createdAt).getTime();
 			const responseTime = new Date(message.updatedAt).getTime();
 			return responseTime - requestTime;
 		}
-		
+
 		return undefined;
 	}
 
@@ -164,7 +168,7 @@
 
 				<!-- Assistant message with markdown formatting -->
 				<div
-					class="group markdown-content animate-in fade-in slide-in-from-bottom-2 pt-6 pb-2 text-base leading-7 duration-500 ease-out cursor-default"
+					class="group markdown-content animate-in fade-in slide-in-from-bottom-2 cursor-default pt-6 pb-2 text-base leading-7 duration-500 ease-out"
 				>
 					{@html renderMarkdown(String(message.content))}
 					<!-- Assistant message attachments -->
@@ -178,11 +182,12 @@
 
 					<!-- Message Statistics -->
 					{#if message.role === 'assistant' && !message.streaming && !message.isStreaming}
-						<MessageStats 
-							usage={message.usage} 
-							model={message.model} 
+						<MessageStats
+							usage={message.usage}
+							model={message.model}
 							provider={message.provider}
-							responseTime={calculateResponseTime(message)} 
+							responseTime={calculateResponseTime(message)}
+							{conversationId}
 						/>
 					{/if}
 				</div>
@@ -208,13 +213,16 @@
 	}
 
 	@keyframes terminal-cursor-content {
-		0%, 33.32% {
+		0%,
+		33.32% {
 			content: '|';
 		}
-		33.33%, 66.65% {
+		33.33%,
+		66.65% {
 			content: '||';
 		}
-		66.66%, 100% {
+		66.66%,
+		100% {
 			content: '|||';
 		}
 	}

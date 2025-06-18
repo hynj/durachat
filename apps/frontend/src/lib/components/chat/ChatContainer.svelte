@@ -657,7 +657,13 @@
 		onscroll={checkScrollPosition}
 		class="h-full overflow-x-visible overflow-y-auto p-4 pb-40"
 	>
-		<ChatMessages bind:messages bind:allAttachments bind:isStreaming bind:reasoningHistory />
+		<ChatMessages
+			bind:messages
+			bind:allAttachments
+			bind:isStreaming
+			bind:reasoningHistory
+			{conversationId}
+		/>
 
 		<ThinkingDisplay bind:isThinking bind:currentThinkingContent bind:thinkingMessageId />
 
