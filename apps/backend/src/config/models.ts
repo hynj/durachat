@@ -41,6 +41,10 @@ export const MODELS_CONFIG: Record<string, ProviderInfo> = {
         displayName: 'Gemini 2.5 Pro',
         description: 'Most capable model for complex reasoning tasks',
         contextWindow: 1000000,
+        inputPricing: '$1.25 / 1M tokens (<=200k), $2.50 / 1M tokens (>200k)',
+        outputPricing: '$10.00 / 1M tokens (<=200k), $15.00 / 1M tokens (>200k)',
+        promptTokenCostPer1K: 0.125, // $1.25 per 1M tokens = $0.00125 per 1K = 0.125 cents per 1K
+        completionTokenCostPer1K: 1.0, // $10.00 per 1M tokens = $0.010 per 1K = 1.0 cents per 1K
         supportsThinking: true
       },
       {
@@ -48,6 +52,10 @@ export const MODELS_CONFIG: Record<string, ProviderInfo> = {
         displayName: 'Gemini 2.5 Flash (Thinking)',
         description: 'Fast model with advanced reasoning capabilities',
         contextWindow: 1000000,
+        inputPricing: '$0.30 / 1M tokens (text/image/video), $1.00 / 1M tokens (audio)',
+        outputPricing: '$2.50 / 1M tokens',
+        promptTokenCostPer1K: 0.03, // $0.30 per 1M tokens = $0.0003 per 1K = 0.03 cents per 1K
+        completionTokenCostPer1K: 0.25, // $2.50 per 1M tokens = $0.0025 per 1K = 0.25 cents per 1K
         supportsThinking: true
       },
       {
@@ -55,7 +63,22 @@ export const MODELS_CONFIG: Record<string, ProviderInfo> = {
         displayName: 'Gemini 2.5 Flash (Standard)',
         description: 'Fast and cost-effective model for most tasks',
         contextWindow: 1000000,
+        inputPricing: '$0.30 / 1M tokens (text/image/video), $1.00 / 1M tokens (audio)',
+        outputPricing: '$2.50 / 1M tokens',
+        promptTokenCostPer1K: 0.03, // $0.30 per 1M tokens = $0.0003 per 1K = 0.03 cents per 1K
+        completionTokenCostPer1K: 0.25, // $2.50 per 1M tokens = $0.0025 per 1K = 0.25 cents per 1K
         supportsThinking: false
+      },
+      {
+        id: 'gemini-2.5-flash-lite-preview-06-17',
+        displayName: 'Gemini 2.5 Flash Lite',
+        description: 'Lower cost model for large scale processing and high volume tasks',
+        contextWindow: 1000000,
+        inputPricing: '$0.10 / 1M tokens',
+        outputPricing: '$0.40 / 1M tokens',
+        promptTokenCostPer1K: 0.01, // $0.10 per 1M tokens = $0.0001 per 1K = 0.01 cents per 1K
+        completionTokenCostPer1K: 0.04, // $0.40 per 1M tokens = $0.0004 per 1K = 0.04 cents per 1K
+        supportsThinking: true
       }
     ]
   },
@@ -158,6 +181,10 @@ export const MODELS_CONFIG: Record<string, ProviderInfo> = {
         displayName: 'Claude Sonnet 4',
         description: 'Latest generation Sonnet model',
         contextWindow: 200000,
+        inputPricing: '$3.00 / 1M tokens',
+        outputPricing: '$15.00 / 1M tokens',
+        promptTokenCostPer1K: 0.3, // $3.00 per 1M tokens = $0.003 per 1K = 0.3 cents per 1K
+        completionTokenCostPer1K: 1.5, // $15.00 per 1M tokens = $0.015 per 1K = 1.5 cents per 1K
         supportsThinking: true
       },
       {
@@ -165,6 +192,10 @@ export const MODELS_CONFIG: Record<string, ProviderInfo> = {
         displayName: 'Claude Opus 4',
         description: 'Most powerful Claude model for complex tasks',
         contextWindow: 200000,
+        inputPricing: '$15.00 / 1M tokens',
+        outputPricing: '$75.00 / 1M tokens',
+        promptTokenCostPer1K: 1.5, // $15.00 per 1M tokens = $0.015 per 1K = 1.5 cents per 1K
+        completionTokenCostPer1K: 7.5, // $75.00 per 1M tokens = $0.075 per 1K = 7.5 cents per 1K
         supportsThinking: true
       },
       {
@@ -172,6 +203,10 @@ export const MODELS_CONFIG: Record<string, ProviderInfo> = {
         displayName: 'Claude 3.5 Sonnet',
         description: 'Balanced model for most tasks',
         contextWindow: 200000,
+        inputPricing: '$3.00 / 1M tokens',
+        outputPricing: '$15.00 / 1M tokens',
+        promptTokenCostPer1K: 0.3, // $3.00 per 1M tokens = $0.003 per 1K = 0.3 cents per 1K
+        completionTokenCostPer1K: 1.5, // $15.00 per 1M tokens = $0.015 per 1K = 1.5 cents per 1K
         supportsThinking: false
       },
       {
@@ -190,6 +225,10 @@ export const MODELS_CONFIG: Record<string, ProviderInfo> = {
         displayName: 'Claude 3 Opus',
         description: 'Previous generation flagship model',
         contextWindow: 200000,
+        inputPricing: '$15.00 / 1M tokens',
+        outputPricing: '$75.00 / 1M tokens',
+        promptTokenCostPer1K: 1.5, // $15.00 per 1M tokens = $0.015 per 1K = 1.5 cents per 1K
+        completionTokenCostPer1K: 7.5, // $75.00 per 1M tokens = $0.075 per 1K = 7.5 cents per 1K
         supportsThinking: false
       }
     ]

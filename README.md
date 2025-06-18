@@ -42,6 +42,8 @@ PUBLIC_HONO_API_URL=http://localhost:5787
 run bun install in the root directory
 run bun run dev in the root directory
 
+Navigate to http://localhost:5180
+
 ## Deploying
 
 To deploy to Cloudflare, run the following commands:

@@ -94,8 +94,8 @@
 					if (newConversationId) {
 						conversation = await getConversation(newConversationId);
 						if (conversation) {
-							currentProvider = conversation.provider || 'anthropic';
-							currentModel = conversation.model || 'claude-sonnet-4-20250514';
+							currentProvider = conversation.provider || 'openai';
+							currentModel = conversation.model || 'gpt-4.1-mini';
 						} else {
 							// If we have a conversation ID but no conversation exists,
 							// this is a new conversation from the "New" button
@@ -115,8 +115,8 @@
 					try {
 						conversation = await getConversation(newConversationId);
 						if (conversation) {
-							currentProvider = conversation.provider || 'anthropic';
-							currentModel = conversation.model || 'claude-sonnet-4-20250514';
+							currentProvider = conversation.provider || 'openai';
+							currentModel = conversation.model || 'gpt-4.1-mini';
 						} else {
 							// If we have a conversation ID but no conversation exists,
 							// this is a new conversation from the "New" button
@@ -618,17 +618,17 @@
 		}
 	}
 
-	// Auto-scroll to bottom when new messages arrive, but only if user was already at bottom
-	$effect(() => {
-		if (messagesContainer && messages.length > 0) {
-			const { scrollTop, scrollHeight, clientHeight } = messagesContainer;
-			const wasAtBottom = scrollHeight - scrollTop - clientHeight < 150;
+	// Auto-scroll disabled - users can manually scroll to bottom using the button
+	// $effect(() => {
+	// 	if (messagesContainer && messages.length > 0) {
+	// 		const { scrollTop, scrollHeight, clientHeight } = messagesContainer;
+	// 		const wasAtBottom = scrollHeight - scrollTop - clientHeight < 150;
 
-			if (wasAtBottom || isStreaming || isThinking) {
-				setTimeout(() => scrollToBottom(), 10);
-			}
-		}
-	});
+	// 		if (wasAtBottom || isStreaming || isThinking) {
+	// 			setTimeout(() => scrollToBottom(), 10);
+	// 		}
+	// 	}
+	// });
 
 	// Update scroll button visibility when messages change
 	$effect(() => {
@@ -637,17 +637,17 @@
 		}
 	});
 
-	// Auto-scroll when thinking content updates
-	$effect(() => {
-		if (messagesContainer && isThinking && currentThinkingContent) {
-			const { scrollTop, scrollHeight, clientHeight } = messagesContainer;
-			const wasAtBottom = scrollHeight - scrollTop - clientHeight < 150;
+	// Auto-scroll for thinking content disabled
+	// $effect(() => {
+	// 	if (messagesContainer && isThinking && currentThinkingContent) {
+	// 		const { scrollTop, scrollHeight, clientHeight } = messagesContainer;
+	// 		const wasAtBottom = scrollHeight - scrollTop - clientHeight < 150;
 
-			if (wasAtBottom) {
-				setTimeout(() => scrollToBottom(), 10);
-			}
-		}
-	});
+	// 		if (wasAtBottom) {
+	// 			setTimeout(() => scrollToBottom(), 10);
+	// 		}
+	// 	}
+	// });
 </script>
 
 <div class="relative h-screen">

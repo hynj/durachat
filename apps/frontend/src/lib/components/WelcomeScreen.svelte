@@ -105,7 +105,7 @@
 						<span class="border-border/20 w-full border-t" />
 					</div>
 					<div class="relative flex justify-center text-xs uppercase">
-						<span class="bg-background text-muted-foreground px-2">Or</span>
+						<span class="text-muted-foreground px-2">Or</span>
 					</div>
 				</div>
 

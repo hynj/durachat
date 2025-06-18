@@ -23,7 +23,7 @@ export const users = sqliteTable(
       .notNull()
       .$defaultFn(() => generateSecureCapitalRandomString()),
     // Credit balance in cents (50p = 50 cents for new accounts)
-    credits: integer("credits").notNull().default(50),
+    credits: integer("credits").notNull().default(0),
     instanceIP: text("instance_ip").notNull(),
     preferences: text("preferences", { mode: "json" }).$type<{
       defaultModel?: string;

@@ -32,7 +32,7 @@ export const userSettings = sqliteTable("user_settings", {
     theme: "light",
   })),
   // Credit balance in one hundredths (50p = 5000 for new accounts)
-  balanceInOneHundreths: integer("balance").notNull().default(5000),
+  balanceInOneHundreths: integer("balance").notNull().default(500),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => {

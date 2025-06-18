@@ -188,7 +188,7 @@ export class AnthropicProvider implements AIProvider {
 
       // Get final usage information from the result
       const finalResult = await result;
-      const usage = finalResult.usage;
+      const usage = await finalResult.usage;
       const endTime = Date.now();
       
       if (options.onComplete) {

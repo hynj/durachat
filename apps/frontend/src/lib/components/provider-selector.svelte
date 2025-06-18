@@ -76,14 +76,8 @@
 			// Close selector
 			showSelector = false;
 		} catch (err) {
-			// If conversation doesn't exist on backend yet, that's fine
-			// The provider will be used when creating the conversation
-			if (err instanceof Error && err.message.includes('Conversation not found')) {
-				console.log('🔄 Provider switch - conversation not on backend yet, will use on creation');
-			} else {
-				error = err instanceof Error ? err.message : 'Failed to switch provider';
-				console.error('Failed to switch provider:', err);
-			}
+			error = err instanceof Error ? err.message : 'Failed to switch provider';
+			console.error('Failed to switch provider:', err);
 		} finally {
 			switching = false;
 		}
@@ -160,7 +154,7 @@
 			<div class="flex items-center gap-1">
 				<Badge variant="outline" class="h-6 px-1.5 text-xs">
 					<CreditCard class="mr-1 h-2.5 w-2.5" />
-					£{(userSettings.credits / 100).toFixed(2)}
+					${(userSettings.credits / 100).toFixed(2)}
 				</Badge>
 				{#if userSettings.credits <= 10}
 					<Badge variant="destructive" class="h-6 px-1.5 text-xs">Low</Badge>

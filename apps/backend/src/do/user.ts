@@ -51,7 +51,7 @@ export class User extends DurableObject {
     // Initialize user settings with defaults
     await this.db.insert(userSettings).values({
       id: "user_settings",
-      balanceInOneHundreths: 5000, // £50 default balance
+      balanceInOneHundreths: 50, // £50 default balance
       preferences: {
         defaultModel: "gemini-2.5-flash-preview-05-20",
         defaultProvider: "google",

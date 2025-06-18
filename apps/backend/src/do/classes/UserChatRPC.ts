@@ -98,23 +98,39 @@ export class UserChatRPC extends RpcTarget {
       throw new Error(`API key not configured for provider: ${provider}`);
     }
 
-    const existingConversation = await getConversation(this.db, conversationId);
+    let existingConversation = await getConversation(this.db, conversationId);
+    
+    // If conversation doesn't exist, create it with the new provider/model
     if (!existingConversation) {
-      throw new Error(`Conversation not found for update: ${conversationId}`);
-    }
-
-    const updateResult = await this.db
-      .update(conversations)
-      .set({
+      logger.info('PROVIDER', 'Creating new conversation with provider', {
+        conversation_id: conversationId,
+        provider: provider,
+        model: model
+      });
+      
+      existingConversation = await createConversation(this.db, {
+        id: conversationId,
+        title: '...',
         provider,
         model,
+        createdAt: new Date(),
         updatedAt: new Date()
-      })
-      .where(eq(conversations.id, conversationId))
-      .returning();
+      });
+    } else {
+      // Update existing conversation
+      const updateResult = await this.db
+        .update(conversations)
+        .set({
+          provider,
+          model,
+          updatedAt: new Date()
+        })
+        .where(eq(conversations.id, conversationId))
+        .returning();
 
-    if (updateResult.length === 0) {
-      throw new Error('Conversation not found or could not be updated');
+      if (updateResult.length === 0) {
+        throw new Error('Conversation not found or could not be updated');
+      }
     }
   }
 
@@ -348,7 +364,7 @@ export class UserChatRPC extends RpcTarget {
 
       await createMessage(this.db, userMessageData);
 
-      if (nextOrder === 0 && conversation.title === "...") {
+      if (nextOrder === 0 && (conversation.title === "..." || conversation.title === "New Chat")) {
         const title = prompt.slice(0, 50).trim() + (prompt.length > 50 ? '...' : '');
         await updateConversationTitle(this.db, conversation.id, title);
         conversation.title = title;
