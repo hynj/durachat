@@ -20,7 +20,8 @@
 		Copy,
 		Shield,
 		ArrowLeft,
-		AlertCircle
+		AlertCircle,
+		Keyboard
 	} from 'lucide-svelte';
 	import { client } from '$lib/rpc/hono';
 	import { goto } from '$app/navigation';
@@ -392,6 +393,58 @@
 								<option value="dark">Dark</option>
 								<option value="system">System</option>
 							</select>
+						</div>
+					</div>
+				</Card.Content>
+			</Card.Root>
+
+			<!-- Keyboard Shortcuts -->
+			<Card.Root>
+				<Card.Header>
+					<Card.Title class="flex items-center gap-2">
+						<Keyboard class="h-5 w-5" />
+						Keyboard Shortcuts
+					</Card.Title>
+					<Card.Description>
+						Quick access shortcuts to improve your workflow
+					</Card.Description>
+				</Card.Header>
+				<Card.Content>
+					<div class="space-y-4">
+						<div class="flex items-center justify-between py-2">
+							<div class="flex flex-col">
+								<span class="text-sm font-medium">Search conversations</span>
+								<span class="text-xs text-muted-foreground">Focus the search input in sidebar</span>
+							</div>
+							<div class="flex gap-1">
+								<Badge variant="secondary" class="text-xs font-mono">Ctrl</Badge>
+								<span class="text-xs text-muted-foreground">+</span>
+								<Badge variant="secondary" class="text-xs font-mono">K</Badge>
+							</div>
+						</div>
+						<div class="flex items-center justify-between py-2">
+							<div class="flex flex-col">
+								<span class="text-sm font-medium">New conversation</span>
+								<span class="text-xs text-muted-foreground">Start a new chat and focus input</span>
+							</div>
+							<div class="flex gap-1">
+								<Badge variant="secondary" class="text-xs font-mono">Ctrl</Badge>
+								<span class="text-xs text-muted-foreground">+</span>
+								<Badge variant="secondary" class="text-xs font-mono">Shift</Badge>
+								<span class="text-xs text-muted-foreground">+</span>
+								<Badge variant="secondary" class="text-xs font-mono">O</Badge>
+							</div>
+						</div>
+						<div class="flex items-center justify-between py-2">
+							<div class="flex flex-col">
+								<span class="text-sm font-medium">Toggle sidebar</span>
+								<span class="text-xs text-muted-foreground">Show or hide the conversations sidebar</span>
+							</div>
+							<div class="flex gap-1">
+								<Badge variant="secondary" class="text-xs font-mono">Ctrl</Badge>
+								<span class="text-xs text-muted-foreground">+</span>
+								<Badge variant="secondary" class="text-xs font-mono">B</Badge>
+							</div>
 						</div>
 					</div>
 				</Card.Content>

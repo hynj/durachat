@@ -35,6 +35,7 @@
 		value={searchQuery}
 		oninput={handleInput}
 		{placeholder}
+		data-search-input
 		class="focus:bg-muted/30 h-9 border-0 bg-transparent pr-9 pl-9 text-sm transition-colors focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
 	/>
 	{#if searchQuery}

@@ -3,8 +3,10 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import AppSidebar from '$lib/components/app-sidebar.svelte';
 	import { ModeWatcher } from 'mode-watcher';
-	import { setContext } from 'svelte';
+	import { setContext, onMount } from 'svelte';
 	import { Toaster } from 'svelte-sonner';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	let { children } = $props();
 
@@ -16,6 +18,61 @@
 		trigger: () => conversationRefreshTrigger++,
 		version: () => conversationRefreshTrigger
 	}));
+
+	// Global keyboard shortcuts
+	async function handleKeydown(event: KeyboardEvent) {
+		// Check for our specific shortcuts
+		if (event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey) {
+			switch (event.key.toLowerCase()) {
+				case 'k':
+					event.preventDefault();
+					// Focus search in sidebar
+					const searchInput = document.querySelector('[data-search-input]') as HTMLInputElement;
+					if (searchInput) {
+						searchInput.focus();
+					}
+					break;
+				case 'b':
+					event.preventDefault();
+					// Toggle sidebar
+					const sidebarTrigger = document.querySelector('[data-sidebar="trigger"]') as HTMLButtonElement;
+					if (sidebarTrigger) {
+						sidebarTrigger.click();
+					}
+					break;
+			}
+		} else if (event.ctrlKey && event.shiftKey && !event.altKey && !event.metaKey) {
+			switch (event.key.toLowerCase()) {
+				case 'o':
+					event.preventDefault();
+					// Start new conversation
+					import('uuidv7').then(({ uuidv7 }) => {
+						const newConversationId = uuidv7();
+						const url = new URL($page.url);
+						url.searchParams.set('c', newConversationId);
+						goto(url.toString(), { replaceState: true, noScroll: true }).then(() => {
+							// Focus the chat input after navigation
+							setTimeout(() => {
+								const inputElement = document.querySelector('textarea[placeholder*="message"]') as HTMLTextAreaElement;
+								if (inputElement) {
+									inputElement.focus();
+								}
+							}, 100);
+						});
+					});
+					break;
+			}
+		}
+	}
+
+	onMount(() => {
+		// Add global keyboard event listener
+		document.addEventListener('keydown', handleKeydown);
+		
+		return () => {
+			document.removeEventListener('keydown', handleKeydown);
+		};
+	});
 </script>
 
 <ModeWatcher />

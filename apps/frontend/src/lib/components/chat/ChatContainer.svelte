@@ -20,7 +20,9 @@
 	import ThinkingDisplay from './ThinkingDisplay.svelte';
 	import ConnectionStatus from './ConnectionStatus.svelte';
 	import ReasoningEffortSelector from '../reasoning-effort-selector.svelte';
+	import AuthenticatedWelcome from '../AuthenticatedWelcome.svelte';
 	import { client } from '$lib/rpc/hono';
+	import { getUserIdFromCookie } from '$lib/auth';
 	import { setWebSocketConnected } from '$lib/stores/connection.svelte';
 
 	let chatClient: ChatWebSocketClient;
@@ -46,6 +48,10 @@
 	let pendingMessageId: string | null = $state(null);
 	let allAttachments: Array<{ attachment: any; messageId: string | null }> = $state([]);
 	let userSettings: { credits: number } | null = $state(null);
+	let username: string | undefined = $state();
+
+	// Check if we should show welcome screen
+	let showWelcome = $derived(!conversationId && messages.length === 0 && !isStreaming && !isWaitingForResponse);
 
 	// Get conversation refresh context
 	const conversationRefreshContext =
@@ -171,7 +177,7 @@
 
 	// Note: Removed database retry effect - let WebSocket handle all loading for consistency
 
-	// Load user settings
+	// Load user settings and username
 	async function loadUserSettings() {
 		try {
 			const response = await client['user-settings'].$get();
@@ -180,6 +186,11 @@
 				userSettings = {
 					credits: settings.credits
 				};
+				// Extract username from user ID or settings if available
+				const userId = getUserIdFromCookie();
+				if (userId && userId.startsWith('github:')) {
+					username = userId.replace('github:', '');
+				}
 			}
 		} catch (error) {
 			console.error('Failed to load user settings:', error);
@@ -694,32 +705,60 @@
 	// 		}
 	// 	}
 	// });
+
+	async function handleSuggestedPrompt(prompt: string) {
+		// If we don't have a conversation yet, create one first
+		if (!conversationId) {
+			const { uuidv7 } = await import('uuidv7');
+			const newConversationId = uuidv7();
+			
+			// Update URL to create a new conversation
+			const url = new URL($page.url);
+			url.searchParams.set('c', newConversationId);
+			await goto(url.toString(), { replaceState: true, noScroll: true });
+		}
+		
+		// Set the input value and focus
+		inputValue = prompt;
+		
+		// Auto-focus the input after setting the prompt
+		setTimeout(() => {
+			const inputElement = document.querySelector('textarea[placeholder*="message"]') as HTMLTextAreaElement;
+			if (inputElement) {
+				inputElement.focus();
+			}
+		}, 100);
+	}
 </script>
 
 <div class="relative h-screen">
-	<!-- Chat Messages - extends full height with bottom padding for input area -->
-	<div
-		bind:this={messagesContainer}
-		onscroll={checkScrollPosition}
-		class="h-full overflow-x-visible overflow-y-auto p-4 pb-40"
-	>
-		<ChatMessages
-			bind:messages
-			bind:allAttachments
-			bind:isStreaming
-			bind:reasoningHistory
-			{conversationId}
-		/>
+	{#if showWelcome}
+		<AuthenticatedWelcome {username} onSuggestedPrompt={handleSuggestedPrompt} />
+	{:else}
+		<!-- Chat Messages - extends full height with bottom padding for input area -->
+		<div
+			bind:this={messagesContainer}
+			onscroll={checkScrollPosition}
+			class="h-full overflow-x-visible overflow-y-auto p-4 pb-40"
+		>
+			<ChatMessages
+				bind:messages
+				bind:allAttachments
+				bind:isStreaming
+				bind:reasoningHistory
+				{conversationId}
+			/>
 
-		<ThinkingDisplay bind:isThinking bind:currentThinkingContent bind:thinkingMessageId />
+			<ThinkingDisplay bind:isThinking bind:currentThinkingContent bind:thinkingMessageId />
 
-		<ConnectionStatus
-			bind:isWaitingForResponse
-			bind:showScrollButton
-			{isThinking}
-			onScrollToBottom={scrollToBottom}
-		/>
-	</div>
+			<ConnectionStatus
+				bind:isWaitingForResponse
+				bind:showScrollButton
+				{isThinking}
+				onScrollToBottom={scrollToBottom}
+			/>
+		</div>
+	{/if}
 
 	<ChatInput
 		bind:inputValue
