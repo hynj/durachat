@@ -21,7 +21,7 @@
 
 		if (doId && uniqueId) {
 			try {
-				const response = await client.share.view.$get({
+				const response = await client['api-share'].view.$get({
 					query: {
 						do: doId,
 						id: uniqueId

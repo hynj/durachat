@@ -81,7 +81,7 @@
 
 		isGeneratingShareUrl = true;
 		try {
-			const response = await client.share.create.$post({
+			const response = await client['api-share'].create.$post({
 				json: { conversationId }
 			});
 

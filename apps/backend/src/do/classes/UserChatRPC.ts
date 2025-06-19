@@ -265,6 +265,23 @@ export class UserChatRPC extends RpcTarget {
         session_id: sessionId
       });
 
+      // Update WebSocket tags to reflect new conversation
+      const currentTags = this.ctx.getTags(ws);
+      const newTags = currentTags.filter(tag => !tag.startsWith('conversationId:'));
+      newTags.push(`sessionId:${sessionId}`); // Ensure session tag is present
+      
+      if (conversationId && conversationId !== 'null') {
+        newTags.push(`conversationId:${conversationId}`);
+        // Update session storage
+        await this.storage.put(`session:${sessionId}:conversation`, conversationId);
+      } else {
+        // Remove conversation from session storage if switching to null
+        await this.storage.delete(`session:${sessionId}:conversation`);
+      }
+      
+      // Apply new tags to WebSocket
+      this.ctx.setWebSocketTags(ws, newTags);
+
       if (!conversationId) {
         ws.send(JSON.stringify({
           type: 'conversation_switched',

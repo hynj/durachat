@@ -33,7 +33,7 @@ const routes = app
   .route('/attachments', attachmentRoutes)
   .route('/oauth', oAuthRoutes)
   .route('/user-settings', userSettingsRoutes)
-  .route('/share', shareRoutes)
+  .route('/api-share', shareRoutes)
 
 export { Control }
 export { User }
