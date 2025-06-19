@@ -14,6 +14,7 @@
 		generateConversationTitle
 	} from '$lib/db/queries';
 	import type { Conversation, Message, Usage } from '$lib/db/database';
+	import { dbService } from '$lib/db/database';
 	import ChatMessages from './ChatMessages.svelte';
 	import ChatInput from './ChatInput.svelte';
 	import ThinkingDisplay from './ThinkingDisplay.svelte';
@@ -62,6 +63,9 @@
 
 	// Simple reactive conversation ID from URL
 	let urlConversationId = $derived($page.url.searchParams.get('c'));
+	
+	// Database ready state
+	let isDatabaseReady = $derived(dbService.isInitialized());
 
 	// Load conversation when URL changes - but prevent infinite loops
 	let lastLoadedConversationId: string | null = null;
@@ -72,6 +76,7 @@
 
 		// Only load if conversation ID changed, different from what we last loaded, and not currently loading
 		if (newConversationId !== lastLoadedConversationId && !isLoadingConversation) {
+			console.log('🔄 Loading conversation:', newConversationId, 'previous:', lastLoadedConversationId);
 			isLoadingConversation = true;
 			lastLoadedConversationId = newConversationId;
 
@@ -88,39 +93,69 @@
 			reasoningHistory.clear();
 
 			// Load existing conversation via WebSocket
+			console.log('🔍 WebSocket state - chatClient exists:', !!chatClient, 'isConnected:', chatClient?.isConnected());
 			if (chatClient && chatClient.isConnected()) {
 				try {
 					// Try to get conversation from frontend SQLite first (for immediate UI)
 					if (newConversationId) {
-						conversation = await getConversation(newConversationId);
-						if (conversation) {
-							currentProvider = conversation.provider || 'openai';
-							currentModel = conversation.model || 'gpt-4.1-mini';
+						// Wait for database to be ready before attempting to load
+						if (dbService.isInitialized()) {
+							const localConversation = await getConversation(newConversationId);
+							console.log('📄 Local SQLite conversation result:', localConversation);
+							conversation = localConversation;
+							if (conversation) {
+								currentProvider = conversation.provider || 'openai';
+								currentModel = conversation.model || 'gpt-4.1-mini';
+								
+								// Also load messages from SQLite for immediate display
+								try {
+									const localMessages = await getConversationMessages(newConversationId);
+									console.log('📄 Local SQLite messages result:', localMessages.length, 'messages');
+									messages = localMessages;
+								} catch (error) {
+									console.error('Failed to load messages from SQLite:', error);
+								}
+							} else {
+								// If we have a conversation ID but no conversation exists,
+								// this is a new conversation from the "New" button
+								console.log('🆕 New conversation with pre-generated ID:', newConversationId);
+							}
 						} else {
-							// If we have a conversation ID but no conversation exists,
-							// this is a new conversation from the "New" button
-							console.log('🆕 New conversation with pre-generated ID:', newConversationId);
+							console.log('⏳ Database not ready yet, will load conversation from WebSocket response');
 						}
 					}
 
 					// Request conversation data from backend via WebSocket
 					console.log('🔄 Requesting conversation switch via WebSocket:', newConversationId);
-					chatClient.switchConversation(newConversationId);
+					await chatClient.switchConversation(newConversationId);
 				} catch (error) {
 					console.error('Failed to load conversation:', error);
 				}
 			} else {
-				// WebSocket not ready yet, just load from local SQLite for now
+				// WebSocket not ready yet, try to load from local SQLite if database is ready
 				if (newConversationId) {
 					try {
-						conversation = await getConversation(newConversationId);
-						if (conversation) {
-							currentProvider = conversation.provider || 'openai';
-							currentModel = conversation.model || 'gpt-4.1-mini';
+						if (dbService.isInitialized()) {
+							conversation = await getConversation(newConversationId);
+							if (conversation) {
+								currentProvider = conversation.provider || 'openai';
+								currentModel = conversation.model || 'gpt-4.1-mini';
+								
+								// Also load messages from SQLite for immediate display
+								try {
+									const localMessages = await getConversationMessages(newConversationId);
+									console.log('📄 Local SQLite messages result (fallback):', localMessages.length, 'messages');
+									messages = localMessages;
+								} catch (error) {
+									console.error('Failed to load messages from SQLite (fallback):', error);
+								}
+							} else {
+								// If we have a conversation ID but no conversation exists,
+								// this is a new conversation from the "New" button
+								console.log('🆕 New conversation with pre-generated ID:', newConversationId);
+							}
 						} else {
-							// If we have a conversation ID but no conversation exists,
-							// this is a new conversation from the "New" button
-							console.log('🆕 New conversation with pre-generated ID:', newConversationId);
+							console.log('⏳ Database and WebSocket not ready yet, conversation will load when ready');
 						}
 					} catch (error) {
 						console.error('Failed to load conversation from local SQLite:', error);
@@ -133,6 +168,8 @@
 			isLoadingConversation = false;
 		}
 	});
+
+	// Note: Removed database retry effect - let WebSocket handle all loading for consistency
 
 	// Load user settings
 	async function loadUserSettings() {
@@ -160,6 +197,14 @@
 			console.log('🔌 WebSocket connected');
 			isConnected = true;
 			setWebSocketConnected(true);
+			
+			// If we have a conversation ID from URL but no conversation data, request it
+			const currentUrlConversationId = $page.url.searchParams.get('c');
+			console.log('🔍 On WebSocket connect - URL conversation ID:', currentUrlConversationId);
+			if (currentUrlConversationId) {
+				console.log('🔄 WebSocket connected, requesting conversation from URL:', currentUrlConversationId);
+				chatClient.switchConversation(currentUrlConversationId);
+			}
 		});
 
 		chatClient.on('disconnected', () => {
@@ -172,6 +217,7 @@
 
 		chatClient.on('conversation_switched', async (message) => {
 			console.log('🔄 Received conversation_switched:', message);
+			console.log('🔍 Current conversation ID from URL:', urlConversationId);
 
 			if (message.conversationId) {
 				// Update conversation metadata
